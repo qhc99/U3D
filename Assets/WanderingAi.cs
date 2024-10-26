@@ -12,6 +12,8 @@ public class WanderingAi : MonoBehaviour
     {
         isAlive = true;
     }
+    [SerializeField] GameObject fireballPrefab;
+    private GameObject fireball;
 
     // Update is called once per frame
     void Update()
@@ -22,7 +24,17 @@ public class WanderingAi : MonoBehaviour
             Ray ray = new Ray(transform.position, transform.forward);
             if (Physics.SphereCast(ray, 0.75f, out RaycastHit hit))
             {
-                if (hit.distance < obstacleRange)
+                GameObject hitObject = hit.transform.gameObject;
+                if (hitObject.GetComponent<PlayerCharacter>())
+                {
+                    if (fireball == null)
+                    {
+                        fireball = Instantiate(fireballPrefab) as GameObject;
+                        fireball.transform.position = transform.TransformPoint(Vector3.forward * 1.5f);
+                        fireball.transform.rotation = transform.rotation;
+                    }
+                }
+                else if (hit.distance < obstacleRange)
                 {
                     float angle = Random.Range(-110, 110);
                     transform.Rotate(0, angle, 0);
