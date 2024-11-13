@@ -5,9 +5,23 @@ using UnityEngine;
 public class WanderingAi : MonoBehaviour
 {
     public float speed = 3.0f;
+    public const float baseSpeed = 3.0f;
     public float obstacleRange = 5.0f;
     private bool isAlive;
     // Start is called before the first frame update
+    void OnEnable()
+    {
+        Messenger<float>.AddListener(GameEvent.SPEED_CHANGED, OnSpeedChanged);
+    }
+    void OnDisable()
+    {
+        Messenger<float>.RemoveListener(GameEvent.SPEED_CHANGED, OnSpeedChanged);
+    }
+
+    private void OnSpeedChanged(float value)
+    {
+        speed = baseSpeed * value;
+    }
     void Start()
     {
         isAlive = true;
